@@ -17,7 +17,7 @@ public class WindowClose : MonoBehaviour
 
         closeButtonToWindowMap = new Dictionary<GameObject, GameObject>();
 
-        // Populate the dictionary with button-window pairs
+        // pair up buttons and windows 
         for (int i = 0; i < closeButton.Length && i < closeWindow.Length; i++)
         {
             closeButtonToWindowMap.Add(closeButton[i], closeWindow[i]);
