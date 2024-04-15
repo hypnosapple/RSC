@@ -8,10 +8,12 @@ public class VideoPlay : MonoBehaviour
     public VideoClip[] videoclips;
     private VideoPlayer videoplayer;
     private int videoClipIndex;
+    private int maxVideoClipIndex;
 
     private void Awake()
     {
         videoplayer = GetComponent<VideoPlayer>();
+        maxVideoClipIndex = videoclips.Length - 1;
     }
 
     void Start()
@@ -22,12 +24,13 @@ public class VideoPlay : MonoBehaviour
 
     public void playNext()
     {
-        
-        if (videoClipIndex >= videoclips.Length)
-        {
-            videoClipIndex = videoClipIndex % videoclips.Length;
-        }
         videoClipIndex++;
+
+        if (videoClipIndex > maxVideoClipIndex)
+        {
+            videoClipIndex = 0;
+        }
+        
         videoplayer.clip = videoclips[videoClipIndex];
         
     }
@@ -35,14 +38,18 @@ public class VideoPlay : MonoBehaviour
 
     public void playBack()
     {
-        
-        if (videoClipIndex >= videoclips.Length)
+
+        videoClipIndex--; 
+
+        // If index goes below zero, wrap around to the last video clip
+        if (videoClipIndex < 0)
         {
-            videoClipIndex = videoClipIndex % videoclips.Length;
+            videoClipIndex = maxVideoClipIndex;
         }
-        videoClipIndex--;
+
+        // Set the video clip to be played
         videoplayer.clip = videoclips[videoClipIndex];
-       
+
     }
 
 
