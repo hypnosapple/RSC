@@ -7,9 +7,12 @@ using UnityEngine.UI;
 public class FTvideoControl : MonoBehaviour
 {
     public VideoClip[] videoclips;
+    public GameObject ExploreButtons;
 
     //Gameobject that carrying RawImage
-    public GameObject videoDisplayObject; 
+    public GameObject videoDisplayObject;
+    //public GameObject[] exploreButtons;
+
     private VideoPlayer videoplayer;
     private RawImage rawImage;
     private int videoClipIndex;
@@ -30,6 +33,7 @@ public class FTvideoControl : MonoBehaviour
     void Start()
     {
         videoplayer.clip = videoclips[0];
+       
     }
 
     void Update()
@@ -49,6 +53,12 @@ public class FTvideoControl : MonoBehaviour
             {
                 // Reset the size of the video display object to its original size
                 videoDisplayObject.GetComponent<RectTransform>().sizeDelta = new Vector2(2880, 1620);
+            }
+
+            // Enable ExploreButtons if videoClipIndex is 1, otherwise disable it
+            if (ExploreButtons != null)
+            {
+                ExploreButtons.SetActive(videoClipIndex == 1);
             }
         }
     }
@@ -73,20 +83,36 @@ public class FTvideoControl : MonoBehaviour
     public void MoveLeft()
     {
         videoDisplayObject.GetComponent<LRUDcontrol>().MoveLeft();
+        //foreach (GameObject button in exploreButtons)
+        //{
+        //    button.GetComponent<LRUDcontrol>().MoveLeft();
+        //}
     }
 
     public void MoveRight()
     {
         videoDisplayObject.GetComponent<LRUDcontrol>().MoveRight();
+        //foreach (GameObject button in exploreButtons)
+        //{
+        //    button.GetComponent<LRUDcontrol>().MoveRight();
+        //}
     }
 
     public void MoveUp()
     {
         videoDisplayObject.GetComponent<LRUDcontrol>().MoveUp();
+        //foreach (GameObject button in exploreButtons)
+        //{
+        //    button.GetComponent<LRUDcontrol>().MoveUp();
+        //}
     }
 
     public void MoveDown()
     {
         videoDisplayObject.GetComponent<LRUDcontrol>().MoveDown();
+        //foreach (GameObject button in exploreButtons)
+        //{
+        //    button.GetComponent<LRUDcontrol>().MoveDown();
+        //}
     }
 }
