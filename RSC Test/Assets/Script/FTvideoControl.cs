@@ -1,23 +1,20 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 using UnityEngine.Video;
 using UnityEngine.UI;
 
-public class FTvideoControl : MonoBehaviour
+public class FTVideoControl : MonoBehaviour
 {
+    public Transform CameraMove;
     public VideoClip[] videoclips;
     public GameObject ExploreButtons;
-
-    //Gameobject that carrying RawImage
+    public GameObject VPfrontCam;
     public GameObject videoDisplayObject;
-    //public GameObject[] exploreButtons;
-
     private VideoPlayer videoplayer;
     private RawImage rawImage;
     private int videoClipIndex;
 
-    //buttons HERE:
+    public VideoZoom videoZoom;
     public GameObject CameraFlipButton;
     public GameObject LeftButton;
     public GameObject RightButton;
@@ -28,51 +25,32 @@ public class FTvideoControl : MonoBehaviour
     {
         videoplayer = GetComponent<VideoPlayer>();
         rawImage = videoDisplayObject.GetComponent<RawImage>();
+        videoZoom = FindObjectOfType<VideoZoom>();
+        LRUDControl.CameraMoved += OnCameraMoved;
     }
 
     void Start()
     {
         videoplayer.clip = videoclips[0];
-       
+        videoplayer.Stop();
     }
 
     void Update()
     {
-        // Check if a video clip is playing
         if (videoplayer.isPlaying)
         {
-            // Check the index of the currently playing video clip
-            videoClipIndex = System.Array.IndexOf(videoclips, videoplayer.clip);
-
-            // Adjust the size of the video display object based on the current video clip
-            if (videoClipIndex == 0) 
-            {
-                videoDisplayObject.GetComponent<RectTransform>().sizeDelta = new Vector2(1920, 1080); // Change the width and height as needed
-            }
-            else
-            {
-                // Reset the size of the video display object to its original size
-                videoDisplayObject.GetComponent<RectTransform>().sizeDelta = new Vector2(2880, 1620);
-            }
-
-            // Enable ExploreButtons if videoClipIndex is 1, otherwise disable it
+            videoClipIndex = Array.IndexOf(videoclips, videoplayer.clip);
             if (ExploreButtons != null)
             {
-                ExploreButtons.SetActive(videoClipIndex == 1);
+                ExploreButtons.SetActive(videoClipIndex == 0);
             }
         }
     }
 
     public void CameraFlipClick()
     {
-        videoClipIndex++;
-
-        // Set the next video clip to the VideoPlayer
-        videoplayer.clip = videoclips[videoClipIndex];
-
-        // Play the video
+        VPfrontCam.SetActive(false);
         videoplayer.Play();
-
         CameraFlipButton.SetActive(false);
         LeftButton.SetActive(true);
         RightButton.SetActive(true);
@@ -82,37 +60,26 @@ public class FTvideoControl : MonoBehaviour
 
     public void MoveLeft()
     {
-        videoDisplayObject.GetComponent<LRUDcontrol>().MoveLeft();
-        //foreach (GameObject button in exploreButtons)
-        //{
-        //    button.GetComponent<LRUDcontrol>().MoveLeft();
-        //}
+        videoDisplayObject.GetComponent<LRUDControl>().MoveLeft();
     }
 
     public void MoveRight()
     {
-        videoDisplayObject.GetComponent<LRUDcontrol>().MoveRight();
-        //foreach (GameObject button in exploreButtons)
-        //{
-        //    button.GetComponent<LRUDcontrol>().MoveRight();
-        //}
+        videoDisplayObject.GetComponent<LRUDControl>().MoveRight();
     }
 
     public void MoveUp()
     {
-        videoDisplayObject.GetComponent<LRUDcontrol>().MoveUp();
-        //foreach (GameObject button in exploreButtons)
-        //{
-        //    button.GetComponent<LRUDcontrol>().MoveUp();
-        //}
+        videoDisplayObject.GetComponent<LRUDControl>().MoveUp();
     }
 
     public void MoveDown()
     {
-        videoDisplayObject.GetComponent<LRUDcontrol>().MoveDown();
-        //foreach (GameObject button in exploreButtons)
-        //{
-        //    button.GetComponent<LRUDcontrol>().MoveDown();
-        //}
+        videoDisplayObject.GetComponent<LRUDControl>().MoveDown();
+    }
+
+    private void OnCameraMoved(Vector3 newPosition)
+    {
+        VideoZoom.OnCameraMoved(newPosition);
     }
 }

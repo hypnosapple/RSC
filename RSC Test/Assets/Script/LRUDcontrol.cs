@@ -1,77 +1,52 @@
+using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class LRUDcontrol : MonoBehaviour
+public class LRUDControl : MonoBehaviour
 {
-    public RectTransform videoDisplayRectTransform;
-    //public GameObject[] moveButtons;
+    public Transform CameraMove;
     public float moveDuration = 1.0f; // Duration of the movement in seconds
+
+    public static event Action<Vector3> CameraMoved;
 
     public void MoveLeft()
     {
-        StartCoroutine(MoveToPosition(new Vector3(videoDisplayRectTransform.localPosition.x - 400f, videoDisplayRectTransform.localPosition.y, videoDisplayRectTransform.localPosition.z)));
-        //foreach (GameObject button in moveButtons)
-        //{
-        //    StartCoroutine(MoveButtonToPosition(button, new Vector3(button.transform.localPosition.x - 400f, button.transform.localPosition.y, button.transform.localPosition.z)));
-        //}
+        StartCoroutine(MoveToPosition(new Vector3(CameraMove.localPosition.x + 1f, CameraMove.localPosition.y, CameraMove.localPosition.z)));
     }
 
     public void MoveRight()
     {
-        StartCoroutine(MoveToPosition(new Vector3(videoDisplayRectTransform.localPosition.x + 400f, videoDisplayRectTransform.localPosition.y, videoDisplayRectTransform.localPosition.z)));
-        //foreach (GameObject button in moveButtons)
-        //{
-        //    StartCoroutine(MoveButtonToPosition(button, new Vector3(button.transform.localPosition.x + 400f, button.transform.localPosition.y, button.transform.localPosition.z)));
-        //}
+        StartCoroutine(MoveToPosition(new Vector3(CameraMove.localPosition.x - 1f, CameraMove.localPosition.y, CameraMove.localPosition.z)));
     }
 
     public void MoveUp()
     {
-        StartCoroutine(MoveToPosition(new Vector3(videoDisplayRectTransform.localPosition.x, videoDisplayRectTransform.localPosition.y + 200f, videoDisplayRectTransform.localPosition.z)));
-        //foreach (GameObject button in moveButtons)
-        //{
-        //    StartCoroutine(MoveButtonToPosition(button, new Vector3(button.transform.localPosition.x, button.transform.localPosition.y + 200f, button.transform.localPosition.z)));
-        //}
+        StartCoroutine(MoveToPosition(new Vector3(CameraMove.localPosition.x, CameraMove.localPosition.y - 0.5f, CameraMove.localPosition.z)));
     }
 
     public void MoveDown()
     {
-        StartCoroutine(MoveToPosition(new Vector3(videoDisplayRectTransform.localPosition.x, videoDisplayRectTransform.localPosition.y - 200f, videoDisplayRectTransform.localPosition.z)));
-        //foreach (GameObject button in moveButtons)
-        //{
-        //    StartCoroutine(MoveButtonToPosition(button, new Vector3(button.transform.localPosition.x, button.transform.localPosition.y - 200f, button.transform.localPosition.z)));
-        //}
+        StartCoroutine(MoveToPosition(new Vector3(CameraMove.localPosition.x, CameraMove.localPosition.y + 0.5f, CameraMove.localPosition.z)));
     }
-
 
     private IEnumerator MoveToPosition(Vector3 targetPosition)
     {
         float elapsedTime = 0.0f;
-        Vector3 startPosition = videoDisplayRectTransform.localPosition;
+        Vector3 startPosition = CameraMove.localPosition;
 
         while (elapsedTime < moveDuration)
         {
-            videoDisplayRectTransform.localPosition = Vector3.Lerp(startPosition, targetPosition, elapsedTime / moveDuration);
+            CameraMove.localPosition = Vector3.Lerp(startPosition, targetPosition, elapsedTime / moveDuration);
             elapsedTime += Time.deltaTime;
             yield return null;
         }
 
-        videoDisplayRectTransform.localPosition = targetPosition; // Ensure final position is exact
+        CameraMove.localPosition = targetPosition; // Ensure final position is exact
+        NotifyCameraMoved(targetPosition);
     }
 
-    //private IEnumerator MoveButtonToPosition(GameObject button, Vector3 targetPosition)
-    //{
-    //    float elapsedTime = 0.0f;
-    //    Vector3 startPosition = button.transform.localPosition;
-
-    //    while (elapsedTime < moveDuration)
-    //    {
-    //        button.transform.localPosition = Vector3.Lerp(startPosition, targetPosition, elapsedTime / moveDuration);
-    //        elapsedTime += Time.deltaTime;
-    //        yield return null;
-    //    }
-
-    //    button.transform.localPosition = targetPosition; // Ensure final position is exact
-    //}
+    private void NotifyCameraMoved(Vector3 newPosition)
+    {
+        CameraMoved?.Invoke(newPosition);
+    }
 }

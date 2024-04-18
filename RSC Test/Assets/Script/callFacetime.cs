@@ -16,6 +16,10 @@ public class callFacetime : MonoBehaviour
     public GameObject facetimeWindow;
     public GameObject facetime;
 
+    //public GameObject Camera1;
+
+    public GameObject[] disableWhileFacetiming;
+
     private string Name;
 
     // set the title text
@@ -41,10 +45,19 @@ public class callFacetime : MonoBehaviour
     // accept button click
     public void OnAcceptButtonClick()
     {
-        UnityEngine.Debug.Log("Accept button clicked");
+        //UnityEngine.Debug.Log("Accept button clicked");
 
         // Add logic to accept the Facetime call
-        facetime.SetActive(true);
+        //facetime.SetActive(true);
+        //Camera1.SetActive(true);
+
+
+        //disable the facetime popUp
+        foreach (GameObject obj in disableWhileFacetiming)
+        {
+            obj.SetActive(false);
+        }
+
         facetimeWindow.SetActive(false);
     }
 
@@ -58,3 +71,4 @@ public class callFacetime : MonoBehaviour
 
     }
 }
+
